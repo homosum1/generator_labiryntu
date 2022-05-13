@@ -109,5 +109,5 @@ złożoność metody rysującej graf **O(n)**
 złożoność metod generujących graf:
 
 - utworzenie krawędzi **O(n)**
-- nadanie losowych priorytetów krawędziom **O(n)** (dokładnie **O(4n)** - mimo zagdnieżdżonej pętli, wewnętrzna pętla wykona się maksymalnie 4 razy)
-- utworzenie drugiego grafu **O(n^2)** - zaimplementowanie przeze mnie sortowanie w psotaci **insertion sort** posiada złożoność **O(n^2)**, która ogranicza od góry złożonośc samej części algorytmu odpowiedzialnej za sprawdzanie przynależności do setów oraz ich łączenie. Przy zaimplementowaniu lepszego algorytmu sortowania złożoność czasowa mogłaby by osiągnąć tutja nawet **O(log(n))**
+- nadanie losowych priorytetów krawędziom **O(n)** (dokładnie **O(an)** - mimo zagdnieżdżonej pętli, wewnętrzna pętla wykona się maksymalnie 4 razy a = około 4)
+- utworzenie drugiego grafu **O(n^2)** - zaimplementowanie przeze mnie sortowanie w psotaci **insertion sort** posiada złożoność **O(n^2)**, która ogranicza od góry złożonośc samej części algorytmu odpowiedzialnej za sprawdzanie przynależności do setów oraz ich łączenie. Przy zaimplementowaniu lepszego algorytmu sortowania złożoność czasowa mogłaby być tutaj znacząco ograniczona.

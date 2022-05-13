@@ -13,6 +13,8 @@ Pliki wchodzące w skład projektu:
 - **PathFiller.hpp** (klasa odpowiedzialna za wygenerowanie grafu, który może następnie zostać przełożony na labirynt)
 - **Maze.hpp** (klasa implementująca generacje labiryntu w konsoli, na podstawie grafu)
 
+- **makefile**
+
 Poniżej przedstawiam omówienie budowy każdej z wykorzystanej klasy (oprócz klas związanych bezpośrednio z implementacją grauf, ponieważ te zostały już omówione przy innej okazji).
 
 
@@ -47,7 +49,7 @@ przykładowe bloki labiryntu:
 Po przejściu wszystkich krawędzi grafu pozostaje nam sklejenie ze sobą wszystkich bloków. Bloki sklejam w ramach jednej pętli for() przenosząc kolejne wiersze bloków pochodzących z tego samego wiersza struktury do pojedynczego sturmienia.
 
 
-## Maze.hpp
+## PathFiller.hpp
 
 Dobrze, wiemy już jak narysować labirynt na podstawie grafu, jak jednak utworzyć w grafie krawędzie tak, aby odpowiadiały one ścieżce wyglądem odpowiadającej ścieżkę labiryntu? Rozwiązaniem tutaj okaże się lekko zmodyfikowana wersja **algorytmu Kruskala**. Algorytm ten odpowiada za wyznaczenie minimalnego drzewa rozpinającego graf. Rezultatem takiego roziwązanania powinien graf, przypominający ten pokazany poniżej:
 
@@ -57,8 +59,14 @@ Jest tutaj jeden problem. Algorytm Kruskala, zakłada, że dostarczymy mu graf w
 
 Utworzę więc krawędzie, jednak nie wszystkie! takie działanie byłoby bardzo nie wydajne, ponieważ większość krawędzi jaka mogłaby istnieć nie przełoży się na wygląd naszego labiryntu. Rozplanujmy więc, jakie krawędzie należałoby przeznaczyć do analizy. Tak naprawdę w ramach danego wierzchołka interesuje nas wyłącznie utworzenie krawędzi z sąsiadującymi wierzchołkami (jak sąsiadów nie uznajemy wierzchołków znajdujących się na skos od naszego wierzchołka bazowego). Narzucamy jeszcze kilka ograniczeń na wierzchołki skarnej i w rezultacie otrzymujemy porządany schemat:
 
+![Zrzut ekranu 2022-05-13 o 10 31 03](https://user-images.githubusercontent.com/36136484/168244525-f9a4d057-5e3a-44e2-bde9-b25149318846.png)
 
 możemy więc podzielić wierzchołki na 3 kategorie:
 - skrajne z lewej strony
 - wewnętrzne
 - skrajne z prawej strony
+
+Metoda **fillPath()** odpowiada za wypełnienie grafu krawędziami w taki właśnie sposób. Następną metodą jest metoda **randomizeWeights()**, której sama nazwa wskazuje, że będzie ona odpowiedizalna za nadanie krawędziom losowych wag. Korzystam w tym celu z iteratora przechodzącego po krawędziach grafu.
+
+Ostatnią w tej klasie i zarazem najbardziej złożoną metodą jest metoda **createSecondGraph()**, która stanowi implementację mojej wersji algorytmu Kruskala. Na początek towrzę tablicę przechowującą parę **std::pair** w której skład wchodzi wskaźnik do danej krawędzi oraz waga, która została jej przypisana. Następnie tworzę kontener **std::set** nie przyjmujący duplikatów obiektów. Wykorzystuję go do odseparowania duplikatów danych krawędzi (korzystam z grafu nieskierowanego, zatem zarówno krawędź 1->2 jak i 2->1 istnieje w grafie i reprezentuje to samo połączenie w moim układzie labiryntu). Po utworzeniu tabeli sortuję ją na podstawie wag, warto zaznaczyć, że operuję tutaj na wskaźnikach co skutecznie minimalizuje koszt obliczeń. Do sorotowania wykorzystyałem zaimplementowany przeze mnie algorytm **insertion sort*** sortujący wskaźniki do krawędzi na podstawie przypisanych im wag.
+

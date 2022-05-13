@@ -26,7 +26,7 @@ Z racji na to, że zdecydowałem się na implementację konsolową, chciałem ja
 
 Rozplanowanie labiryntu:
 
-Tak naprawdę cała sekwencja wynikowa, czyli nasz labirynt reprezentowana jest w postaci długiego stringa, do jego tymczasowego przeptrzymywania w kodzie wykorzystam więc strumień **stringstream**, który pozwoli mi na łatwe dodawanie do niego elementów. Fakt, że wynik jest ciągłą sekwencją znaków utrudnia znacząco dodawanie do niego elementów grafu tworzących labirynt w porządanej kolejności. Trzeba wymyślić do tego celu zatem rozwiązanie dające nam elastyczność dodawania znaków w dowolnym miejscu ciągu.
+Tak naprawdę cała sekwencja wynikowa, czyli nasz labirynt reprezentowana jest w postaci długiego stringa, do jego tymczasowego przetrzymywania w kodzie wykorzystam więc strumień **stringstream**, który pozwoli mi na łatwe dodawanie do niego elementów. Fakt, że wynik jest ciągłą sekwencją znaków utrudnia znacząco dodawanie do niego elementów grafu tworzących labirynt w porządanej kolejności. Trzeba wymyślić do tego celu zatem rozwiązanie dające nam elastyczność dodawania znaków w dowolnym miejscu ciągu.
 
 Do dobrego zobrazowania tego co chcemy uzyskać przytoczę poglądowe zjęcie:
 

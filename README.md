@@ -100,3 +100,14 @@ Plik projektu znajduje się w folderze **projekt**. Po pobraniu folderu należy 
 ![Zrzut ekranu 2022-05-13 o 10 56 45](https://user-images.githubusercontent.com/36136484/168248766-d06e83c6-9372-4809-a823-ae41d786b644.png)
 
 
+## Złożoność obliczeniowa 
+
+**n** - liczba wierzchołków grafu
+
+złożoność metody rysującej graf **O(n)**
+
+złożoność metod generujących graf:
+
+- utworzenie krawędzi **O(n)**
+- nadanie losowych priorytetów krawędziom **O(n)** (dokładnie **O(4n)** - mimo zagdnieżdżonej pętli, wewnętrzna pętla wykona się maksymalnie 4 razy)
+- utworzenie drugiego grafu **O(n^2)** - zaimplementowanie przeze mnie sortowanie w psotaci **insertion sort** posiada złożoność **O(n^2)**, która ogranicza od góry złożonośc samej części algorytmu odpowiedzialnej za sprawdzanie przynależności do setów oraz ich łączenie. Przy zaimplementowaniu lepszego algorytmu sortowania złożoność czasowa mogłaby by osiągnąć tutja nawet **O(log(n))**

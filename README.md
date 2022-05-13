@@ -41,7 +41,7 @@ Sturktura **block** wypełniana jest więc "ściana po ścianie", co równoważn
 przykładowe bloki labiryntu:
 
 
-![Zrzut ekranu 2022-05-13 o 10 00 32](https://user-images.githubusercontent.com/36136484/168238508-e77dc71a-2da1-4183-acaf-343fdcedfd41.png) &nbsp![Zrzut ekranu 2022-05-13 o 10 00 50](https://user-images.githubusercontent.com/36136484/168238544-e24cdade-e762-4837-a7d5-8bcd65e4d1eb.png)
+![Zrzut ekranu 2022-05-13 o 10 00 32](https://user-images.githubusercontent.com/36136484/168238508-e77dc71a-2da1-4183-acaf-343fdcedfd41.png) &nbsp;&nbsp;![Zrzut ekranu 2022-05-13 o 10 00 50](https://user-images.githubusercontent.com/36136484/168238544-e24cdade-e762-4837-a7d5-8bcd65e4d1eb.png)
 
 * czerwony kolor reprezentuje ściany, natomiast czerwony posadzkę po której możemy się poruszać.
 

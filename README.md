@@ -22,9 +22,9 @@ Poniżej przedstawiam omówienie budowy każdej z wykorzystanej klasy (oprócz k
 
 Przewrotnie omówienie projektu rozpocznę od ostatniego jego elementu, czyli od klasy odpowiedzialnej za rysowanie labiryntu na podstawie dostarczonej klasy grafu. Klasa ta została napisana przeze mnie jako pierwsza, ponieważ dobrze zdradza zamysł idący za implementacją koncepcji rozpinania grafu.
 
-Z racji na to, że zdecydowałem się na implementację konsolową, chciałem jakoś urozmaicić graficzną szatę projektu. Do tego celu wykorzystałem **ANSI escape sequences**: https://en.wikipedia.org/wiki/ANSI_escape_code#Colors, pozwalające mi za pomocą specjalnych znaczników zmienić kolory wyświetlanych w terminalu symbolów. Jeśli się nie mylę jest to **wyłącznie unix'owa składnia**. Uruchomienie więc projektu na systemie Windows, może dać więc bardzo nieporządane efekty (zamiast ładnego, kolorowego labiryntu wyświetli się nam na konsoli kilka tysięci niedziałających znaczników).
+Z racji na to, że zdecydowałem się na implementację konsolową, chciałem jakoś urozmaicić graficzną szatę projektu. Do tego celu wykorzystałem **ANSI escape sequences**: https://en.wikipedia.org/wiki/ANSI_escape_code#Colors, pozwalające mi za pomocą specjalnych znaczników zmienić kolory wyświetlanych w terminalu symbolów. Jeśli się nie mylę jest to **wyłącznie unix'owa składnia**. Uruchomienie więc projektu na systemie Windows, może dać więc bardzo nieporządane efekty (zamiast ładnego, kolorowego labiryntu wyświetli się nam na konsoli kilka tysięcy niedziałających znaczników).
 
-Rozpalonowanie labiryntu:
+Rozplanowanie labiryntu:
 
 Tak naprawdę cała sekwencja wynikowa, czyli nasz labirynt reprezentowana jest w postaci długiego stringa, do jego tymczasowego przeptrzymywania w kodzie wykorzystam więc strumień **stringstream**, który pozwoli mi na łatwe dodawanie do niego elementów. Fakt, że wynik jest ciągłą sekwencją znaków utrudnia znacząco dodawanie do niego elementów grafu tworzących labirynt w porządanej kolejności. Trzeba wymyślić do tego celu zatem rozwiązanie dające nam elastyczność dodawania znaków w dowolnym miejscu ciągu.
 

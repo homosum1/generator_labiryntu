@@ -78,15 +78,19 @@ Teraz pozostaje mi stowrzenie nowego grafu, na podstawie specjalnie wyselekcjono
 Poniżej zamieszczam kilka przykładów wygenerowanych labiryntów
 
 x: 3 y: 4
+
 ![Zrzut ekranu 2022-05-13 o 10 52 56](https://user-images.githubusercontent.com/36136484/168247989-f1da6318-7f6e-40c0-91b0-955d78c888a6.png)
 
 x: 10 y: 10
+
 ![Zrzut ekranu 2022-05-13 o 10 53 11](https://user-images.githubusercontent.com/36136484/168248042-a746e811-fd4f-4714-b673-6656f714acd4.png)
 
 x: 15 y: 10
+
 ![Zrzut ekranu 2022-05-13 o 10 53 29](https://user-images.githubusercontent.com/36136484/168248090-25d9892e-114e-41ac-824b-86320513cec7.png)
 
 x: 20 y: 20
+
 ![Zrzut ekranu 2022-05-13 o 10 54 45](https://user-images.githubusercontent.com/36136484/168248373-d21f2407-829a-4872-a457-3c66aa1d3402.png)
 
 ## Kompilacja i uruchomienie projektu

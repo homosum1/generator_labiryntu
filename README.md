@@ -28,15 +28,15 @@ Rozplanowanie labiryntu:
 
 Tak naprawdę cała sekwencja wynikowa, czyli nasz labirynt reprezentowana jest w postaci długiego stringa, do jego tymczasowego przetrzymywania w kodzie wykorzystam więc strumień **stringstream**, który pozwoli mi na łatwe dodawanie do niego elementów. Fakt, że wynik jest ciągłą sekwencją znaków utrudnia znacząco dodawanie do niego elementów grafu tworzących labirynt w porządanej kolejności. Trzeba wymyślić do tego celu zatem rozwiązanie dające nam elastyczność dodawania znaków w dowolnym miejscu ciągu.
 
-Do dobrego zobrazowania tego co chcemy uzyskać przytoczę poglądowe zjęcie:
+Do dobrego zobrazowania tego co chcemy uzyskać przytoczę poglądowe zdjęcie:
 
 
 ![Zrzut ekranu 2022-05-13 o 09 48 17](https://user-images.githubusercontent.com/36136484/168236473-74c3497f-7413-420c-bbf9-daf7302d7747.png)
 
 
-Wykorzystanemu grafowi odpowiadać będzie dynamicznie alokowana dwuwymiarowa tablicy, której indeksy poszczególnych pól odpowiadają numerom wierzchołków grafu. Każde z takich pól, musi mieć w jakiś sposób określoną "rozdzielczość". Przyjąłem, że każde pole reprezentowane jest przez siatkę znaków o rozmiarach 3x3, która reprezentowana jest przez specjalną strukturę **block**. Jest to prosta struktura składająca się z trzech strumieni stringstream. Można się zastanawiać po co tak komplikować problem i używać tej struktury, zamiast prostego stringstreama lub stringa reprezentującego pojedynczy blok siatki?
+Wykorzystanemu grafowi odpowiadać będzie dynamicznie alokowana dwuwymiarowa tablica, której indeksy poszczególnych pól odpowiadają numerom wierzchołków grafu. Każde z takich pól, musi mieć w jakiś sposób określoną "rozdzielczość". Przyjąłem, że każde pole reprezentowane jest przez siatkę znaków o rozmiarach 3x3, która reprezentowana jest przez specjalną strukturę **block**. Jest to prosta struktura składająca się z trzech strumieni stringstream. Można się zastanawiać po co tak komplikować problem i używać tej struktury, zamiast prostego stringstreama lub stringa reprezentującego pojedynczy blok siatki?
 
-Zastanówmy się jak działa nasz algorytm. Przechodząc po kolejnych krawędziach grafu będziemy na bierząco stwierdzać na którym połączeniu siatki powinna znaleźć się ściana, a gdzie może powinno znaleźć się przejście (istnienie krawędzi pomiędzy dwoma wierzchołkami będzie tutaj reprezentować przejście pomiędzy dwoma segmentami siatki). Jak już wspomniałem proces analizy jest dynamiczny i rysując dany blok nie wiemy przykładowo czy fakt istnienia lewej ściany (pola: 00, 01, 02) pozwala nam automatycznie na określenie dalszych pól (np: pól trzeciego rzędzu 10, 20, 30), przecież musimy zdecydować czy od dołu blok ten nie jest połączony ścianą! W tej reprezentacji blok może utworzyć ścianę z lewej strony lub z dołu.
+Zastanówmy się jak działa nasz algorytm. Przechodząc po kolejnych krawędziach grafu będziemy na bierząco stwierdzać na którym połączeniu siatki powinna znaleźć się ściana, a gdzie może powinno znaleźć się przejście (istnienie krawędzi pomiędzy dwoma wierzchołkami będzie tutaj reprezentować przejście pomiędzy dwoma segmentami siatki). Jak już wspomniałem proces analizy jest dynamiczny i rysując dany blok nie wiemy przykładowo: czy fakt istnienia lewej ściany (pola: 00, 01, 02) pozwala nam automatycznie na określenie dalszych pól (np: pól trzeciego rzędzu 10, 20, 30), przecież musimy zdecydować czy od dołu blok ten nie jest połączony ścianą! W tej reprezentacji blok może utworzyć ścianę z lewej strony lub z dołu.
 
 Sturktura **block** wypełniana jest więc "ściana po ścianie", co równoważne jest z równoczesną edycją wielu wierszy lub wielu kolumn w tym samym czasie. Proces ten mając do dyspozycji tylko jednego stringa, byłby bardzo czasochłonny i problematyczny do implementacji.
 
@@ -44,33 +44,33 @@ przykładowe bloki labiryntu:
 
 ![Zrzut ekranu 2022-05-13 o 10 29 40](https://user-images.githubusercontent.com/36136484/168243617-a25a3126-210d-4dee-8791-8b7e0fecc66c.png) &nbsp;![Zrzut ekranu 2022-05-13 o 10 30 03](https://user-images.githubusercontent.com/36136484/168243689-35c0e77d-481a-420f-862c-b066cec4364f.png)
 
-*czerwony kolor reprezentuje ściany, natomiast czerwony posadzkę po której możemy się poruszać.
+*czerwony kolor reprezentuje ściany, natomiast szary posadzkę po której możemy się poruszać.
 
 Po przejściu wszystkich krawędzi grafu pozostaje nam sklejenie ze sobą wszystkich bloków. Bloki sklejam w ramach jednej pętli for() przenosząc kolejne wiersze bloków pochodzących z tego samego wiersza struktury do pojedynczego sturmienia.
 
 
 ## PathFiller.hpp
 
-Dobrze, wiemy już jak narysować labirynt na podstawie grafu, jak jednak utworzyć w grafie krawędzie tak, aby odpowiadiały one ścieżce wyglądem odpowiadającej ścieżkę labiryntu? Rozwiązaniem tutaj okaże się lekko zmodyfikowana wersja **algorytmu Kruskala**. Algorytm ten odpowiada za wyznaczenie minimalnego drzewa rozpinającego graf. Rezultatem takiego roziwązanania powinien graf, przypominający ten pokazany poniżej:
+Dobrze, wiemy już jak narysować labirynt na podstawie grafu, jak jednak utworzyć w grafie krawędzie tak, aby odpowiadały one ścieżce wyglądem odpowiadającej ścieżce labiryntu? Rozwiązaniem tutaj okaże się lekko zmodyfikowana wersja **algorytmu Kruskala**. Algorytm ten odpowiada za wyznaczenie minimalnego drzewa rozpinającego graf. Rezultatem takiego rozwiązanania powinien graf, przypominający ten pokazany poniżej:
 
 ![Zrzut ekranu 2022-05-13 o 10 16 24](https://user-images.githubusercontent.com/36136484/168241256-a957a8f3-0519-445d-a65e-b8eba7fc0b8c.png)
 
-Jest tutaj jeden problem. Algorytm Kruskala, zakłada, że dostarczymy mu graf w którym istnieją już krawędzie, ale też krawędzie też będą miały odpowiadające im wagi. Utworzony przez nas graf nie posiada natomiast, ani krawędzi, ani tym bardziej wag które mogłyby im odpowiadać.
+Jest tutaj jeden problem. Algorytm Kruskala, zakłada, że dostarczymy mu graf w którym istnieją już krawędzie, ale też krawędzie będą miały odpowiadające im wagi. Utworzony przez nas graf nie posiada natomiast, ani krawędzi, ani tym bardziej wag które mogłyby im odpowiadać.
 
-Utworzę więc krawędzie, jednak nie wszystkie! takie działanie byłoby bardzo nie wydajne, ponieważ większość krawędzi jaka mogłaby istnieć nie przełoży się na wygląd naszego labiryntu. Rozplanujmy więc, jakie krawędzie należałoby przeznaczyć do analizy. Tak naprawdę w ramach danego wierzchołka interesuje nas wyłącznie utworzenie krawędzi z sąsiadującymi wierzchołkami (jak sąsiadów nie uznajemy wierzchołków znajdujących się na skos od naszego wierzchołka bazowego). Narzucamy jeszcze kilka ograniczeń na wierzchołki skarnej i w rezultacie otrzymujemy porządany schemat:
+Utworzę więc krawędzie, jednak nie wszystkie! Takie działanie byłoby bardzo niewydajne, ponieważ większość krawędzi jaka mogłaby istnieć nie przełoży się na wygląd naszego labiryntu. Rozplanujmy więc, jakie krawędzie należałoby przeznaczyć do analizy. Tak naprawdę w ramach danego wierzchołka interesuje nas wyłącznie utworzenie krawędzi z sąsiadującymi wierzchołkami (jako sąsiadów nie uznajemy wierzchołków znajdujących się na skos od naszego wierzchołka bazowego). Narzucamy jeszcze kilka ograniczeń na wierzchołki skrajne i w rezultacie otrzymujemy porządany schemat:
 
 ![Zrzut ekranu 2022-05-13 o 10 31 03](https://user-images.githubusercontent.com/36136484/168244525-f9a4d057-5e3a-44e2-bde9-b25149318846.png)
 
-możemy więc podzielić wierzchołki na 3 kategorie:
+Możemy więc podzielić wierzchołki na 3 kategorie:
 - skrajne z lewej strony
 - wewnętrzne
 - skrajne z prawej strony
 
-Metoda **fillPath()** odpowiada za wypełnienie grafu krawędziami w taki właśnie sposób. Następną metodą jest metoda **randomizeWeights()**, której sama nazwa wskazuje, że będzie ona odpowiedizalna za nadanie krawędziom losowych wag. Korzystam w tym celu z iteratora przechodzącego po krawędziach grafu.
+Metoda **fillPath()** odpowiada za wypełnienie grafu krawędziami w taki właśnie sposób. Następną metodą jest metoda **randomizeWeights()**, której sama nazwa wskazuje, że będzie ona odpowiedzialna za nadanie krawędziom losowych wag. Korzystam w tym celu z iteratora przechodzącego po krawędziach grafu.
 
-Ostatnią w tej klasie i zarazem najbardziej złożoną metodą jest metoda **createSecondGraph()**, która stanowi implementację mojej wersji algorytmu Kruskala. Na początek towrzę tablicę przechowującą parę **std::pair** w której skład wchodzi wskaźnik do danej krawędzi oraz waga, która została jej przypisana. Następnie tworzę kontener **std::set** nie przyjmujący duplikatów obiektów. Wykorzystuję go do odseparowania duplikatów danych krawędzi (korzystam z grafu nieskierowanego, zatem zarówno krawędź 1->2 jak i 2->1 istnieje w grafie i reprezentuje to samo połączenie w moim układzie labiryntu). Po utworzeniu tabeli sortuję ją na podstawie wag, warto zaznaczyć, że operuję tutaj na wskaźnikach co skutecznie minimalizuje koszt obliczeń. Do sorotowania wykorzystyałem zaimplementowany przeze mnie algorytm **insertion sort** sortujący wskaźniki do krawędzi na podstawie przypisanych im wag.
+Ostatnią w tej klasie i zarazem najbardziej złożoną metodą jest metoda **createSecondGraph()**, która stanowi implementację mojej wersji algorytmu Kruskala. Na początek tworzę tablicę przechowującą parę **std::pair** w której skład wchodzi wskaźnik do danej krawędzi oraz waga, która została jej przypisana. Następnie tworzę kontener **std::set** nie przyjmujący duplikatów obiektów. Wykorzystuję go do odseparowania duplikatów danych krawędzi (korzystam z grafu nieskierowanego, zatem zarówno krawędź 1->2 jak i 2->1 istnieją w grafie i reprezentujż to samo połączenie w moim układzie labiryntu). Po utworzeniu tabeli sortuję ją na podstawie wag, warto zaznaczyć, że operuję tutaj na wskaźnikach co skutecznie minimalizuje koszt obliczeń. Do sorotowania wykorzystałem zaimplementowany przeze mnie algorytm **insertion sort** sortujący wskaźniki do krawędzi na podstawie przypisanych im wag.
 
-Teraz pozostaje mi stowrzenie nowego grafu, na podstawie specjalnie wyselekcjonowanych krawędzi. Jak to zrobić? Na początku do każdego wierzchołka przypisuję obiekt **std::set** i umieszczam w nim wierzchołek do którego został on przyłączony, następnie wybieram kolejne krawędzie z posortowanej listy i jeżeli wierzchołki między którymi rozpostarta jest krawędź należą do odzdzielnych kontenerów **std::set** to oznacza to, że dodanie tej krawędzi nie pozowli na utworzenie się cyklu w naszym grafie (bram cyklów w grafie gwarantuje nam ładny spójny wygląd labirytnu). W takiej sytuacji możemy śmiało dodać tą krawędź do nowego grafu, a następnie połączyć sety do których należały wierzchołki składające się na krawędź.
+Teraz pozostaje mi stworzenie nowego grafu, na podstawie specjalnie wyselekcjonowanych krawędzi. Jak to zrobić? Na początku do każdego wierzchołka przypisuję obiekt **std::set** i umieszczam w nim wierzchołek do którego został on przyłączony, następnie wybieram kolejne krawędzie z posortowanej listy i jeżeli wierzchołki między którymi rozpostarta jest krawędź należą do oddzielnych kontenerów **std::set** to oznacza to, że dodanie tej krawędzi nie pozwoli na utworzenie się cyklu w grafie (brak cyklów w grafie gwarantuje nam ładny spójny wygląd labiryntu). W takiej sytuacji możemy śmiało dodać tą krawędź do nowego grafu, a następnie połączyć sety do których należały wierzchołki składające się na tą krawędź.
 
 
 ## Maze.hpp
@@ -95,7 +95,7 @@ x: 20 y: 20
 
 ## Kompilacja i uruchomienie projektu
 
-Plik projektu znajduje się w folderze **projekt**. Po pobraniu folderu należy przejść do jego lokalizacji i wykonać polecenie **make** wykonujące za nas kompilację wyspecyfikowaną w pliku **makefile**. Następnie program uruchamiamy poleceniem **./GraphAsMatrix.x** zostaniemy następnie poproszenie przez program o podanie wymiarów labiryntu jaki chcemy wygenerować.
+Plik projektu znajduje się w folderze **projekt**. Po pobraniu folderu należy przejść do jego lokalizacji i wykonać polecenie **make** wykonujące za nas kompilację wyspecyfikowaną w pliku **makefile**. Następnie program uruchamiamy poleceniem **./GraphAsMatrix.x** zostaniemy następnie poproszeni przez program o podanie wymiarów labiryntu jaki chcemy wygenerować.
 
 ![Zrzut ekranu 2022-05-13 o 10 56 45](https://user-images.githubusercontent.com/36136484/168248766-d06e83c6-9372-4809-a823-ae41d786b644.png)
 

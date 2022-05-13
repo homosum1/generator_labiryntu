@@ -68,5 +68,31 @@ możemy więc podzielić wierzchołki na 3 kategorie:
 
 Metoda **fillPath()** odpowiada za wypełnienie grafu krawędziami w taki właśnie sposób. Następną metodą jest metoda **randomizeWeights()**, której sama nazwa wskazuje, że będzie ona odpowiedizalna za nadanie krawędziom losowych wag. Korzystam w tym celu z iteratora przechodzącego po krawędziach grafu.
 
-Ostatnią w tej klasie i zarazem najbardziej złożoną metodą jest metoda **createSecondGraph()**, która stanowi implementację mojej wersji algorytmu Kruskala. Na początek towrzę tablicę przechowującą parę **std::pair** w której skład wchodzi wskaźnik do danej krawędzi oraz waga, która została jej przypisana. Następnie tworzę kontener **std::set** nie przyjmujący duplikatów obiektów. Wykorzystuję go do odseparowania duplikatów danych krawędzi (korzystam z grafu nieskierowanego, zatem zarówno krawędź 1->2 jak i 2->1 istnieje w grafie i reprezentuje to samo połączenie w moim układzie labiryntu). Po utworzeniu tabeli sortuję ją na podstawie wag, warto zaznaczyć, że operuję tutaj na wskaźnikach co skutecznie minimalizuje koszt obliczeń. Do sorotowania wykorzystyałem zaimplementowany przeze mnie algorytm **insertion sort*** sortujący wskaźniki do krawędzi na podstawie przypisanych im wag.
+Ostatnią w tej klasie i zarazem najbardziej złożoną metodą jest metoda **createSecondGraph()**, która stanowi implementację mojej wersji algorytmu Kruskala. Na początek towrzę tablicę przechowującą parę **std::pair** w której skład wchodzi wskaźnik do danej krawędzi oraz waga, która została jej przypisana. Następnie tworzę kontener **std::set** nie przyjmujący duplikatów obiektów. Wykorzystuję go do odseparowania duplikatów danych krawędzi (korzystam z grafu nieskierowanego, zatem zarówno krawędź 1->2 jak i 2->1 istnieje w grafie i reprezentuje to samo połączenie w moim układzie labiryntu). Po utworzeniu tabeli sortuję ją na podstawie wag, warto zaznaczyć, że operuję tutaj na wskaźnikach co skutecznie minimalizuje koszt obliczeń. Do sorotowania wykorzystyałem zaimplementowany przeze mnie algorytm **insertion sort** sortujący wskaźniki do krawędzi na podstawie przypisanych im wag.
+
+Teraz pozostaje mi stowrzenie nowego grafu, na podstawie specjalnie wyselekcjonowanych krawędzi. Jak to zrobić? Na początku do każdego wierzchołka przypisuję obiekt **std::set** i umieszczam w nim wierzchołek do którego został on przyłączony, następnie wybieram kolejne krawędzie z posortowanej listy i jeżeli wierzchołki między którymi rozpostarta jest krawędź należą do odzdzielnych kontenerów **std::set** to oznacza to, że dodanie tej krawędzi nie pozowli na utworzenie się cyklu w naszym grafie (bram cyklów w grafie gwarantuje nam ładny spójny wygląd labirytnu). W takiej sytuacji możemy śmiało dodać tą krawędź do nowego grafu, a następnie połączyć sety do których należały wierzchołki składające się na krawędź.
+
+
+## Maze.hpp
+
+Poniżej zamieszczam kilka przykładów wygenerowanych labiryntów
+
+x: 3 y: 4
+![Zrzut ekranu 2022-05-13 o 10 52 56](https://user-images.githubusercontent.com/36136484/168247989-f1da6318-7f6e-40c0-91b0-955d78c888a6.png)
+
+x: 10 y: 10
+![Zrzut ekranu 2022-05-13 o 10 53 11](https://user-images.githubusercontent.com/36136484/168248042-a746e811-fd4f-4714-b673-6656f714acd4.png)
+
+x: 15 y: 10
+![Zrzut ekranu 2022-05-13 o 10 53 29](https://user-images.githubusercontent.com/36136484/168248090-25d9892e-114e-41ac-824b-86320513cec7.png)
+
+x: 20 y: 20
+![Zrzut ekranu 2022-05-13 o 10 54 45](https://user-images.githubusercontent.com/36136484/168248373-d21f2407-829a-4872-a457-3c66aa1d3402.png)
+
+## Kompilacja i uruchomienie projektu
+
+Plik projektu znajduje się w folderze **projekt**. Po pobraniu folderu należy przejść do jego lokalizacji i wykonać polecenie **make** wykonujące za nas kompilację wyspecyfikowaną w pliku **makefile**. Następnie program uruchamiamy poleceniem **./GraphAsMatrix.x** zostaniemy następnie poproszenie przez program o podanie wymiarów labiryntu jaki chcemy wygenerować.
+
+![Zrzut ekranu 2022-05-13 o 10 56 45](https://user-images.githubusercontent.com/36136484/168248766-d06e83c6-9372-4809-a823-ae41d786b644.png)
+
 

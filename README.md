@@ -16,7 +16,7 @@ Pliki wchodzące w skład projektu:
 Poniżej przedstawiam omówienie budowy każdej z wykorzystanej klasy (oprócz klas związanych bezpośrednio z implementacją grauf, ponieważ te zostały już omówione przy innej okazji).
 
 
-###### Maze.hpp
+## Maze.hpp
 
 Przewrotnie omówienie projektu rozpocznę od ostatniego jego elementu, czyli od klasy odpowiedzialnej za rysowanie labiryntu na podstawie dostarczonej klasy grafu. Klasa ta została napisana przeze mnie jako pierwsza, ponieważ dobrze zdradza zamysł idący za implementacją koncepcji rozpinania grafu.
 
@@ -32,18 +32,33 @@ Do dobrego zobrazowania tego co chcemy uzyskać przytoczę poglądowe zjęcie:
 ![Zrzut ekranu 2022-05-13 o 09 48 17](https://user-images.githubusercontent.com/36136484/168236473-74c3497f-7413-420c-bbf9-daf7302d7747.png)
 
 
-Wykorzystanemu grafowi odpowiadać będzie dynamicznie alokowana dwuwymiarowa tablicy, której indeksy poszczególnych pól odpowiadają numerom wierzchołków grafu. Każde z takich pól, musi mieć w jakiś sposób określoną "rozdzielczość". Przyjąłem, że każde pole reprezentowane jest przez siatkę znaków o rozmiarach 4x4, która reprezentowana jest przez specjalną strukturę **block**. Jest to prosta struktura składająca się z czterech strumieni stringstream. Można się zastanawiać po co tak komplikować problem i używać tej struktury, zamiast prostego stringstreama lub stringa reprezentującego pojedynczy blok siatki?
+Wykorzystanemu grafowi odpowiadać będzie dynamicznie alokowana dwuwymiarowa tablicy, której indeksy poszczególnych pól odpowiadają numerom wierzchołków grafu. Każde z takich pól, musi mieć w jakiś sposób określoną "rozdzielczość". Przyjąłem, że każde pole reprezentowane jest przez siatkę znaków o rozmiarach 3x3, która reprezentowana jest przez specjalną strukturę **block**. Jest to prosta struktura składająca się z trzech strumieni stringstream. Można się zastanawiać po co tak komplikować problem i używać tej struktury, zamiast prostego stringstreama lub stringa reprezentującego pojedynczy blok siatki?
 
-Zastanówmy się jak działa nasz algorytm. Przechodząc po kolejnych krawędziach grafu będziemy na bierząco stwierdzać na którym połączeniu siatki powinna znaleźć się ściana, a gdzie może powinno znaleźć się przejście (istnienie krawędzi pomiędzy dwoma wierzchołkami będzie tutaj reprezentować przejście pomiędzy dwoma segmentami siatki). Jak już wspomniałem proces analizy jest dynamiczny i rysując dany blok nie wiemy przykładowo czy fakt istnienia lewej ściany (pola: 00, 01, 02, 03) pozwala nam automatycznie na określenie dalszych pól (np: pól pierwszego rzędzu 10, 20, 30, 40), przecież musimy zdecydować czy od góry blok ten nie jest połączony ścianą!
+Zastanówmy się jak działa nasz algorytm. Przechodząc po kolejnych krawędziach grafu będziemy na bierząco stwierdzać na którym połączeniu siatki powinna znaleźć się ściana, a gdzie może powinno znaleźć się przejście (istnienie krawędzi pomiędzy dwoma wierzchołkami będzie tutaj reprezentować przejście pomiędzy dwoma segmentami siatki). Jak już wspomniałem proces analizy jest dynamiczny i rysując dany blok nie wiemy przykładowo czy fakt istnienia lewej ściany (pola: 00, 01, 02) pozwala nam automatycznie na określenie dalszych pól (np: pól trzeciego rzędzu 10, 20, 30), przecież musimy zdecydować czy od dołu blok ten nie jest połączony ścianą! W tej reprezentacji blok może utworzyć ścianę z lewej strony lub z dołu.
 
 Sturktura **block** wypełniana jest więc "ściana po ścianie", co równoważne jest z równoczesną edycją wielu wierszy lub wielu kolumn w tym samym czasie. Proces ten mając do dyspozycji tylko jednego stringa, byłby bardzo czasochłonny i problematyczny do implementacji.
 
 przykładowe bloki labiryntu:
 
-
-![Zrzut ekranu 2022-05-13 o 10 00 32](https://user-images.githubusercontent.com/36136484/168238508-e77dc71a-2da1-4183-acaf-343fdcedfd41.png) &nbsp;&nbsp;![Zrzut ekranu 2022-05-13 o 10 00 50](https://user-images.githubusercontent.com/36136484/168238544-e24cdade-e762-4837-a7d5-8bcd65e4d1eb.png)
+![Zrzut ekranu 2022-05-13 o 10 29 40](https://user-images.githubusercontent.com/36136484/168243617-a25a3126-210d-4dee-8791-8b7e0fecc66c.png) &nbsp;![Zrzut ekranu 2022-05-13 o 10 30 03](https://user-images.githubusercontent.com/36136484/168243689-35c0e77d-481a-420f-862c-b066cec4364f.png)
 
 *czerwony kolor reprezentuje ściany, natomiast czerwony posadzkę po której możemy się poruszać.
 
 Po przejściu wszystkich krawędzi grafu pozostaje nam sklejenie ze sobą wszystkich bloków. Bloki sklejam w ramach jednej pętli for() przenosząc kolejne wiersze bloków pochodzących z tego samego wiersza struktury do pojedynczego sturmienia.
 
+
+## Maze.hpp
+
+Dobrze, wiemy już jak narysować labirynt na podstawie grafu, jak jednak utworzyć w grafie krawędzie tak, aby odpowiadiały one ścieżce wyglądem odpowiadającej ścieżkę labiryntu? Rozwiązaniem tutaj okaże się lekko zmodyfikowana wersja **algorytmu Kruskala**. Algorytm ten odpowiada za wyznaczenie minimalnego drzewa rozpinającego graf. Rezultatem takiego roziwązanania powinien graf, przypominający ten pokazany poniżej:
+
+![Zrzut ekranu 2022-05-13 o 10 16 24](https://user-images.githubusercontent.com/36136484/168241256-a957a8f3-0519-445d-a65e-b8eba7fc0b8c.png)
+
+Jest tutaj jeden problem. Algorytm Kruskala, zakłada, że dostarczymy mu graf w którym istnieją już krawędzie, ale też krawędzie też będą miały odpowiadające im wagi. Utworzony przez nas graf nie posiada natomiast, ani krawędzi, ani tym bardziej wag które mogłyby im odpowiadać.
+
+Utworzę więc krawędzie, jednak nie wszystkie! takie działanie byłoby bardzo nie wydajne, ponieważ większość krawędzi jaka mogłaby istnieć nie przełoży się na wygląd naszego labiryntu. Rozplanujmy więc, jakie krawędzie należałoby przeznaczyć do analizy. Tak naprawdę w ramach danego wierzchołka interesuje nas wyłącznie utworzenie krawędzi z sąsiadującymi wierzchołkami (jak sąsiadów nie uznajemy wierzchołków znajdujących się na skos od naszego wierzchołka bazowego). Narzucamy jeszcze kilka ograniczeń na wierzchołki skarnej i w rezultacie otrzymujemy porządany schemat:
+
+
+możemy więc podzielić wierzchołki na 3 kategorie:
+- skrajne z lewej strony
+- wewnętrzne
+- skrajne z prawej strony
